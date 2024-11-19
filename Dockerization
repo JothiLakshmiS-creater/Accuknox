@@ -1,19 +1,23 @@
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: wisecow-deployment
-spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: wisecow
-  template:
-    metadata:
-      labels:
-        app: wisecow
-    spec:
-      containers:
-      - name: wisecow
-        image: <YOUR_DOCKER_REGISTRY>/wisecow-app:latest
-        ports:
-        - containerPort: 5000
+git clone https://github.com/nyrahul/wisecow.git
+# Navigate to the project directory:
+cd wisecow
+# Dockerfile for Wisecow Application
+FROM python:3.9-slim
+# Set working directory
+WORKDIR /app
+
+# Copy application files
+COPY . .
+
+# Install dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Expose the port the app runs on (example: 5000)
+EXPOSE 5000
+
+# Command to run the application
+CMD ["python", "app.py"]
+
+# Build and test the image locally:
+docker build -t wisecow-app .
+docker run -p 5000:5000 wisecow-app
